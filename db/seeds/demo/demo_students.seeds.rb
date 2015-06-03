@@ -29,9 +29,12 @@ AttendanceEvent.destroy_all
   result.update_attributes(student_id: student.id)
   result.save
   discipline_event_generator = Rubystats::NormalDistribution.new(5.2, 8.3)
-  attendance_event_generator = Rubystats::NormalDistribution.new(8.8, 10)
-  # guestimating that 40% of students have discipline events
-  2.in(5) do
+  absence_event_generator = Rubystats::NormalDistribution.new(8.8, 10)
+  tardy_event_generator = Rubystats::NormalDistribution.new(11.9, 16.8)
+  # using separate absence and tardy events could mean an absence and tardy occur on the same day.
+  30.in(100) do
+    # real data indicates only ~7.5% of students have discipline incidents in a year
+    # increasing proportion here makes data look more interesting for development
     5.times do |n|
       date_begin = Time.local(2010 + n, 8, 1)
       date_end = Time.local(2011 + n, 7, 31)
@@ -47,8 +50,20 @@ AttendanceEvent.destroy_all
     5.times do |n|
       date_begin = Time.local(2010 + n, 8, 1)
       date_end = Time.local(2011 + n, 7, 31)
-      attendance_event_generator.rng.round(0).times do
-        attendance_event = AttendanceEvent.new(FakeAttendanceEvent.data)
+      absence_event_generator.rng.round(0).times do
+        attendance_event = AttendanceEvent.new({absence: true})
+        attendance_event.student_id = student.id
+        attendance_event.event_date = Time.at(date_begin + rand * (date_end.to_f - date_begin.to_f))
+        attendance_event.save
+      end
+    end
+  end
+  70.in(100) do
+    5.times do |n|
+      date_begin = Time.local(2010 + n, 8, 1)
+      date_end = Time.local(2011 + n, 7, 31)
+      tardy_event_generator.rng.round(0).times do
+        attendance_event = AttendanceEvent.new({tardy: true})
         attendance_event.student_id = student.id
         attendance_event.event_date = Time.at(date_begin + rand * (date_end.to_f - date_begin.to_f))
         attendance_event.save
