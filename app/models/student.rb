@@ -17,7 +17,14 @@ class Student < ActiveRecord::Base
       event_hash
     end
   end
-  has_many :mcas_results, dependent: :destroy
+  has_many :mcas_results, dependent: :destroy do
+    def sort_by_school_year(student)
+      event_hash = {}
+      school_years = student.school_years
+      school_years.each { |sy| event_hash[sy.name] = sy.mcas_results.find_by_student(student) }
+      event_hash
+    end
+  end
   has_many :star_results, dependent: :destroy
   validates_presence_of :state_id
   validates_uniqueness_of :state_id

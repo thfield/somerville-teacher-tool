@@ -37,7 +37,7 @@ AttendanceEvent.destroy_all
   tardy_event_generator = Rubystats::NormalDistribution.new(11.9, 16.8)
   # using separate absence and tardy events could mean an absence and tardy occur on the same day.
   30.in(100) do
-    # real data indicates only ~7.5% of students have discipline incidents in a year
+    # real data indicates only ~7.5% ( 14.in(200) ) of students have discipline incidents in a year
     # increasing proportion here makes data look more interesting for development
     5.times do |n|
       date_begin = Time.local(2010 + n, 8, 1)

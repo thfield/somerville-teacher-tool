@@ -5,6 +5,7 @@ class SchoolYear < ActiveRecord::Base
     end
   end
   has_many :discipline_incidents, -> (student) { extending FindByStudent }
+  has_many :mcas_results, -> (student) { extending FindByStudent }
   validates_uniqueness_of :name, :start
 
   def self.in_between(school_year_1, school_year_2)

@@ -8,6 +8,7 @@ class StudentsController < ApplicationController
     @presenter = StudentPresenter.new @student
     @attendance_events = @student.attendance_events.sort_by_school_year(@student)
     @discipline_incidents = @student.discipline_incidents.sort_by_school_year(@student)
+    @mcas_results = @student.mcas_results.sort_by_school_year(@student)
   end
 
   def index
