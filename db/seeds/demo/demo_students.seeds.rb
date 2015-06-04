@@ -22,12 +22,16 @@ AttendanceEvent.destroy_all
   student = Student.create(FakeStudent.data)
   student.homeroom_id = Homeroom.all.sample.id
   student.save
-  result = McasResult.new(FakeMcasResult.data)
-  result.update_attributes(student_id: student.id)
-  result.save
-  result = StarResult.new(FakeStarResult.data)
-  result.update_attributes(student_id: student.id)
-  result.save
+  5.times do |n|
+    test_date = Time.local(2010 + n, 10, 1)
+    # creates a test result once a year on october 1st
+    result = McasResult.new(FakeMcasResult.data)
+    result.update_attributes({student_id: student.id, date_taken: test_date})
+    result.save
+    result = StarResult.new(FakeStarResult.data)
+    result.update_attributes({student_id: student.id, date_taken: test_date})
+    result.save
+  end
   discipline_event_generator = Rubystats::NormalDistribution.new(5.2, 8.3)
   absence_event_generator = Rubystats::NormalDistribution.new(8.8, 10)
   tardy_event_generator = Rubystats::NormalDistribution.new(11.9, 16.8)
