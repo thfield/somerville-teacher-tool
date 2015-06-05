@@ -5,6 +5,7 @@ $(function() {
     var profile_data = $("#profile-data")
     var attendance_events = profile_data.data('attendance-events')
     var discipline_incidents = profile_data.data('discipline-incidents')
+    var mcas_results = profile_data.data('mcas-results')
     var student_name = $("#student-name").text()
 
     function isAbsence(event) { return event.absence }
@@ -16,14 +17,14 @@ $(function() {
     var absences_by_year = attendance_school_years.map(function(key) { return countAbsences(attendance_events[key]) })
     var tardies_by_year = attendance_school_years.map(function(key) { return countTardies(attendance_events[key]) })
 
-    function checkZero(options) {
-      return options.series.every( function(element) {
-        return element.data.length == 0;
-      });
-    }
-
     var discipline_school_years = Object.keys(discipline_incidents).reverse()
     var discipline_incidents_by_year = Object.keys(discipline_incidents).map(function(key) { return discipline_incidents[key].length })
+
+    function tookTest(result) { return (result.length > 0) ? true : false }
+    function testPerformance(result, test) { return tookTest(result) ? result[0][test] : 0 }
+    var mcas_school_years = Object.keys(mcas_results).reverse()
+    var ela_growth_by_year  = mcas_school_years.map(function(key) { return testPerformance(mcas_results[key], 'ela_growth') });
+    var math_growth_by_year  = mcas_school_years.map(function(key) { return testPerformance(mcas_results[key], 'math_growth') });
 
     var attendance_series = [{
             name: 'Absences',
@@ -31,13 +32,20 @@ $(function() {
         }, {
             name: 'Tardies',
             data: tardies_by_year
-    }]
-
+        }]
 
     var behavior_series = [{
             name: 'Behavior incidents',
             data: discipline_incidents_by_year
-        },]
+        }]
+
+    var mcas_series = [{
+            name: 'ELA Growth',
+            data: ela_growth_by_year
+        }, {
+            name: 'Math Growth',
+            data: math_growth_by_year
+        }]
 
     var options = {
       chart: {
@@ -103,6 +111,12 @@ $(function() {
       }
     }
 
+    function checkZero(options) {
+      return options.series.every( function(element) {
+        return element.data.length == 0;
+      });
+    }
+
     function zeroDraw(){
       $('#chart').empty();
       var zeroHtml =  '<div class="zero-case">' +
@@ -133,6 +147,11 @@ $(function() {
 	        options.series = behavior_series
           options.title.text = 'behavior incidents'
 	        options.xAxis.categories = discipline_school_years
+	    }
+      else if(selVal == "mcas-growth") {
+	        options.series = mcas_series
+          //options.title.text = 'behavior incidents'
+	        options.xAxis.categories = mcas_school_years
 	    }
 	    // else if(selVal == "mcas-growth") {
 	    //     options.series = mcas_series
