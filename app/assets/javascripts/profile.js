@@ -46,6 +46,7 @@ $(function() {
             name: 'Math Growth',
             data: math_growth_by_year
         }]
+    var all_series = attendance_series.concat( behavior_series, mcas_series );
 
     var options = {
       chart: {
@@ -141,19 +142,24 @@ $(function() {
 	  $("#chart-type").on('change', function(){
 	    var selVal = $("#chart-type").val();
 	    if(selVal == "attendance" || selVal == '') {
-	        options.series = attendance_series
-          options.title.text = 'absences or tardies'
-	        options.xAxis.categories = attendance_school_years
+        options.series = attendance_series
+        options.title.text = 'absences or tardies'
+        options.xAxis.categories = attendance_school_years
 	    }
 	    else if(selVal == "behavior") {
-	        options.series = behavior_series
-          options.title.text = 'behavior incidents'
-	        options.xAxis.categories = discipline_school_years
+        options.series = behavior_series
+        options.title.text = 'behavior incidents'
+        options.xAxis.categories = discipline_school_years
 	    }
       else if(selVal == "mcas-growth") {
-	        options.series = mcas_series
-          //options.title.text = 'behavior incidents'
-	        options.xAxis.categories = mcas_school_years
+        options.series = mcas_series
+        //options.title.text = 'behavior incidents'
+        options.xAxis.categories = mcas_school_years
+	    }
+      else if(selVal == "all-series") {
+        options.series = all_series
+        //options.title.text = 'behavior incidents'
+        options.xAxis.categories = mcas_school_years
 	    }
 	    // else if(selVal == "mcas-growth") {
 	    //     options.series = mcas_series
@@ -168,7 +174,6 @@ $(function() {
 	    //     options.xAxis.categories = ["Sept. 2010 - 11", "Jan. 2010 - 11", "May 2011 - 12", "Sept. 2011 - 12", "Jan. 2011 - 12", "May 2011 - 12", "Sept. 2012 - 13", "Jan. 2012 - 13", "May 2012 - 13", "Sept. 2013 - 14", "Jan. 2013 - 14", "May 2013 - 14"]
 	    // }
       checkZero(options) ? zeroDraw() : chart = new Highcharts.Chart(options);
-      console.log(options);
-	});
+	  });
   }
 });
