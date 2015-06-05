@@ -113,7 +113,9 @@ $(function() {
 
     function checkZero(options) {
       return options.series.every( function(element) {
-        return element.data.length == 0;
+        return element.data.every( function(el) {
+          return el == 0
+        });
       });
     }
 
@@ -166,6 +168,7 @@ $(function() {
 	    //     options.xAxis.categories = ["Sept. 2010 - 11", "Jan. 2010 - 11", "May 2011 - 12", "Sept. 2011 - 12", "Jan. 2011 - 12", "May 2011 - 12", "Sept. 2012 - 13", "Jan. 2012 - 13", "May 2012 - 13", "Sept. 2013 - 14", "Jan. 2013 - 14", "May 2013 - 14"]
 	    // }
       checkZero(options) ? zeroDraw() : chart = new Highcharts.Chart(options);
+      console.log(options);
 	});
   }
 });
